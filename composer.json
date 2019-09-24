@@ -1,0 +1,27 @@
+{
+    "name": "sabri/tiktok",
+    "type": "App",
+    "description" : "sabri/tiktok is php Tiktok scraper",
+    "keywords": ["php", "tiktok", "musically"],
+    "homepage" : "http://github.com/snuzi",
+    "authors": [
+        {
+            "name" : "Sabri Nuzi",
+            "email" : "sabrinuzi@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "^8",
+        "mockery/mockery": "^1.2"
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^6.3",
+        "vlucas/phpdotenv": "^3.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "sabri\\tiktok\\": "src"
+        },
+        "classmap": []
+    }
+}

@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestCase;
 use sabri\tiktok\ApiParams;
 use sabri\tiktok\TiktokApi;
 use Exception;
-use sabri\tiktok\scraper\exceptions\InvalidResponseException;
+use sabri\tiktok\exceptions\InvalidResponseException;
 
 class TiktokApiTest extends TestCase
 {

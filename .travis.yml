@@ -1,16 +1,16 @@
 language: php
 php:
-- 7.3
+    - 7.3
 
 install:
-- composer install
+    - composer install
 
 branches:
-  only:
-    - master
+    only:
+        - master
 
 jobs:
-  include:
-  - stage: Test
-    script:
-    - composer run-script test
+    include:
+        - stage: Test
+            script:
+                - composer run-script test

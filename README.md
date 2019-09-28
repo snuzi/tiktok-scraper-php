@@ -1,4 +1,7 @@
 
+[![Build Status](https://travis-ci.org/snuzi/tiktok-scraper-php.svg?branch=master)](https://travis-ci.org/snuzi/tiktok-scraper-php)
+
+
 This is a PHP implementation for scraping Tiktok (or Musically) through API.
 
 

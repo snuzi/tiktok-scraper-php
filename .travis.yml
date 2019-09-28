@@ -14,4 +14,3 @@ jobs:
         - stage: Test
             script:
                 - composer run-script test
-        - stage: Publish

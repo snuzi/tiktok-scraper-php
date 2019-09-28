@@ -23,10 +23,5 @@
             "sabri\\tiktok\\": "src"
         },
         "classmap": []
-    },
-    "scripts": {
-        "test": [
-            "phpunit --configuration phpunit.xml"
-        ]
     }
 }

@@ -10,6 +10,8 @@ This is a PHP implementation for scraping Tiktok (or Musically) through API.
 - `getUserVideos($uid)` Returns a list of user videos. `$uid` is user's Tiktok unique id.
 - `searchUser($keyword)` Returns user search results.
 - `getVideo($uid)` Returns a video datails. `$uid` is video Tiktok unique id.
+- `searchHashtags($keyword)` Returns a list of found hashtags.
+- `getHashtagMedia($uid)` Returns a list of videos for cartain hashtag. `$uid` is hashtag Tiktok unique id.
 
 **Your contribution is welcome!**
 

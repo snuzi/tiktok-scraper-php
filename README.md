@@ -4,6 +4,7 @@
 
 This is a PHP implementation for scraping Tiktok (or Musically) through API.
 
+
 ## Scraper API
 - `getUser($uid)` Returns user profile data. `$uid` is user's Tiktok unique id.
 - `getUserVideos($uid)` Returns a list of user videos. `$uid` is user's Tiktok unique id.

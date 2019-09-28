@@ -17,3 +17,7 @@ In order to use and make requests to Tiktok API, some extra device parameters ar
 - Install commposer packages in the root of the project.
 `composer install`
 - Run `php demo.php` to see the results
+
+## Run tests
+- Before runing tests you should modify and set correct environment variables `tests/bootstrap.php`.
+- Do not commit `tests/bootstrap.php` after your changes.

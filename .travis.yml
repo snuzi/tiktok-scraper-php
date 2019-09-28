@@ -8,6 +8,7 @@ install:
 branches:
   only:
     - master
+    - run-tests-travis
 
 jobs:
   include:

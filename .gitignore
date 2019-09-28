@@ -3,3 +3,4 @@ composer.phar
 .phpunit.result.cache
 .env
 composer.lock
+/example/index.php

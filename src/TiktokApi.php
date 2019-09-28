@@ -134,6 +134,59 @@ class TiktokApi {
     }
 
     /**
+     * Search hashtags on Tiktok
+     * 
+     * @param string $keyword
+     * @return array list of to 10 found hashtags
+     * @throws Exception
+     */
+    public function searchHashtags(string $keyword)
+    {
+        $extraParams = [
+            'cursor' => 0,
+            'count' => 10,
+            'hot_search' => 0,
+            'keyword' => $keyword,
+            'type' => 1
+        ];
+
+        $content = $this->request(
+            'aweme/v1/challenge/search/', 
+            $extraParams
+        );
+
+        return $content;
+    }
+
+    /**
+     * Get hashtags madiea on Tiktok
+     * 
+     * @param string $uid Tiktok hashtag unique ID
+     * @return array list of videos
+     * @throws Exception
+     */
+    public function getHashtagMedia(string $uid)
+    {
+        $extraParams = [
+            'count' => 20,
+            'offset' => 0,
+            'max_cursor' => 0,
+            'query_type' => 0,
+            'is_cold_start' => 1,
+            'pull_type' => 1,
+            'ch_id' => $uid,
+            'type' => 5
+        ];
+
+        $content = $this->request(
+            'aweme/v1/challenge/aweme/', 
+            $extraParams
+        );
+
+        return $content;
+    }
+
+    /**
      * Makes request to Tiktok
      * 
      * @param $url relative path to the API endpoint

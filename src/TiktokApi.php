@@ -159,16 +159,23 @@ class TiktokApi {
     }
 
     /**
-     * Get hashtags madiea on Tiktok
+     * Get hashtags madiea on Tiktok. Currently returns max top 50 videos.
      * 
      * @param string $uid Tiktok hashtag unique ID
+     * @param int $count limit results, currently only max top 50 videos will be returned
      * @return array list of videos
      * @throws Exception
      */
-    public function getHashtagMedia(string $uid)
+    public function getHashtagMedia(string $uid, int $count = 50)
     {
+        // TODO add support for pagination
+
+        if ($count > 50) {
+            $count = 50;
+        }
+
         $extraParams = [
-            'count' => 20,
+            'count' => $count,
             'offset' => 0,
             'max_cursor' => 0,
             'query_type' => 0,

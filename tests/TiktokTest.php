@@ -45,13 +45,43 @@ class TiktokApiTest extends TestCase
         $userData = $this->_tiktokClient->getUser($uid);
     }
 
-    public function _testSearchUser()
+    public function testSearchUser()
     {
         $keyword = 'real';
 
         $userData = $this->_tiktokClient->searchUser($keyword);
 
         $this->assertIsArray($userData['user_list']);
+    }
+
+    public function testSearchHashtags()
+    {
+        $keyword = 'realmadrid';
+
+        $responseData = $this->_tiktokClient->searchHashtags($keyword);
+
+        $this->assertIsArray($responseData['challenge_list']);
+        $this->assertIsArray($responseData['challenge_list'][0]);
+        $this->assertEquals($responseData['challenge_list'][0]['challenge_info']['cha_name'], $keyword);
+        $this->assertEquals($responseData['challenge_list'][0]['challenge_info']['cid'], '19484');
+    }
+
+    public function testGetHashtagVideos()
+    {
+        $uid = '19484';
+        $responseData = $this->_tiktokClient->getHashtagMedia($uid);
+
+        $this->assertIsArray($responseData['aweme_list']);
+        
+        //Result should contain top 50 videos
+        $this->assertCount(50, $responseData['aweme_list']);
+        
+        $this->assertIsArray($responseData['aweme_list'][0]);
+        $this->assertIsArray($responseData['aweme_list'][0]['video']);
+
+        // Should return only 20 videos
+        $responseData = $this->_tiktokClient->getHashtagMedia($uid, 20);
+        $this->assertCount(20, $responseData['aweme_list']);
     }
 
     private function getTiktokClient()

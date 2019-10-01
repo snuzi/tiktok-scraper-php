@@ -1,20 +1,15 @@
 <?php
+
 namespace tests;
+
 use PHPUnit\Framework\TestCase;
-use sabri\tiktok\ApiParams;
-use sabri\tiktok\TiktokApi;
-use Exception;
 use sabri\tiktok\exceptions\InvalidResponseException;
+use sabri\tiktok\TiktokApi;
 
 class TiktokApiTest extends TestCase
 {
-    
-    private $_tiktokClient;
 
-    protected function setUp(): void
-    {
-        $this->_tiktokClient = $this->getTiktokClient();
-    }
+    private $_tiktokClient;
 
     public function testGetUser()
     {
@@ -40,7 +35,7 @@ class TiktokApiTest extends TestCase
     {
         $this->expectException(InvalidResponseException::class);
         $this->expectExceptionMessage('Invalid parameters');
-       
+
         $uid = 'notValidId';
         $userData = $this->_tiktokClient->getUser($uid);
     }
@@ -72,16 +67,21 @@ class TiktokApiTest extends TestCase
         $responseData = $this->_tiktokClient->getHashtagMedia($uid);
 
         $this->assertIsArray($responseData['aweme_list']);
-        
+
         //Result should contain top 50 videos
         $this->assertCount(50, $responseData['aweme_list']);
-        
+
         $this->assertIsArray($responseData['aweme_list'][0]);
         $this->assertIsArray($responseData['aweme_list'][0]['video']);
 
         // Should return only 20 videos
         $responseData = $this->_tiktokClient->getHashtagMedia($uid, 20);
         $this->assertCount(20, $responseData['aweme_list']);
+    }
+
+    protected function setUp(): void
+    {
+        $this->_tiktokClient = $this->getTiktokClient();
     }
 
     private function getTiktokClient()

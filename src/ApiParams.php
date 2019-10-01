@@ -2,16 +2,17 @@
 
 namespace sabri\tiktok;
 
-use GuzzleHttp\Client;
 use Exception;
+use GuzzleHttp\Client;
 
 /**
  * This class manages Tiktok API query parameters
  */
-class ApiParams {
+class ApiParams
+{
 
     /** @var array default query parameters */
-    private $_baseQueryParameters = [     
+    private $_baseQueryParameters = [
         'carrier' => 'spusu',
         'mcc_mnc' => '23205',
         'ad_area' => '1080x1848',
@@ -66,7 +67,7 @@ class ApiParams {
         'ts' => '1568890050',
         '_rticket' => '1568890049792'
     ];
-    
+
     /** @var array default headers */
     private $_baseHeaders = [
         "Host" => 'api2.musical.ly',
@@ -83,7 +84,7 @@ class ApiParams {
     {
         $this->_sessionQueryParams = $sessionQueryParams;
     }
-    
+
     public function getQueryParams(array $extraParams = []): array
     {
         $this->_baseQueryParameters['_rticket'] = time() * 1000;
@@ -94,11 +95,6 @@ class ApiParams {
             $extraParams,
             $this->getSessionQueryParams()
         );
-    }
-
-    public function getHeaders($extraHeaders = []): array 
-    {
-        return array_replace_recursive($this->_baseHeaders, $extraHeaders);
     }
 
     public function getSessionQueryParams(): array
@@ -115,5 +111,10 @@ class ApiParams {
         $this->_sessionQueryParams = $sessionQueryParams;
 
         return $this;
+    }
+
+    public function getHeaders($extraHeaders = []): array
+    {
+        return array_replace_recursive($this->_baseHeaders, $extraHeaders);
     }
 }

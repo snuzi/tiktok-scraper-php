@@ -4,3 +4,4 @@ composer.phar
 .env
 composer.lock
 /example/index.php
+.idea/

@@ -1,7 +1,7 @@
 <?php
 
 require __DIR__ . '/../vendor/autoload.php';
-(Dotenv\Dotenv::create(__DIR__  . '/../'))->load();
+(Dotenv\Dotenv::create(__DIR__ . '/../'))->load();
 
 use sabri\tiktok\TiktokApi;
 

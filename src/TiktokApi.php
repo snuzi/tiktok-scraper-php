@@ -3,9 +3,8 @@
 namespace sabri\tiktok;
 
 use GuzzleHttp\Client;
-use sabri\tiktok\exceptions\LoginRequiredException;
 use sabri\tiktok\exceptions\InvalidResponseException;
-use sabri\tiktok\exceptions\EmptyResponseException;
+use sabri\tiktok\exceptions\LoginRequiredException;
 
 class TiktokApi {
 
@@ -25,17 +24,18 @@ class TiktokApi {
 
     /**
      * Get user profile info
-     * 
-     * @param string @uid Unique user id on Tiktok
+     *
+     * @param string $uid Unique user id on Tiktok
      * @return array
-     * @throws Exception
+     * @throws InvalidResponseException
+     * @throws LoginRequiredException
      */
     public function getUser(string $uid): array
     {
         $extraParams = ['user_id' => $uid];
 
         $content = $this->request(
-            'aweme/v1/user/', 
+            'aweme/v1/user/',
             $extraParams
         );
 
@@ -43,11 +43,63 @@ class TiktokApi {
     }
 
     /**
-     * Get user videos
-     * 
-     * @param string @uid Unique user id on Tiktok
+     * Makes request to Tiktok
+     *
+     * @param string $url relative path to the API endpoint
+     * @param array $extraQueryParameters Extra query parameters to be appended.
+     * @param array $extraHeaders Extra headers to be appended.
+     *
      * @return array
-     * @throws Exception
+     *
+     * @throws LoginRequiredException if user should be logged in for the current request
+     * @throws InvalidResponseException if there are errors in response
+     * @throws InvalidResponseException if reponse body is empty
+     */
+    protected function request(
+        string $url,
+        array $extraQueryParameters = [],
+        array $extraHeaders = []
+    ): array
+    {
+
+        $client = new Client([
+            'base_uri' => $this->_baseUrl,
+            //'debug' => true
+        ]);
+
+        $response = $client->request('GET', $url, [
+            'query' => $this->_apiParams->getQueryParams($extraQueryParameters),
+            'headers' => $this->_apiParams->getHeaders($extraHeaders),
+        ]);
+
+        if ($response->getStatusCode() != 200) {
+            throw new InvalidResponseException('Problems fetching content');
+        }
+
+        $arrayContent = json_decode($response->getBody()->getContents(), true);
+
+        // If empty response
+        if (!$arrayContent) {
+            throw new InvalidResponseException('Invalid response');
+        }
+
+        if (isset($arrayContent['status_code']) && $arrayContent['status_code'] > 0) {
+            if ($arrayContent['status_code'] == 2483) {
+                throw new LoginRequiredException($arrayContent['status_msg']);
+            }
+            throw new InvalidResponseException($arrayContent['status_msg'] ?? 'Invalid response');
+        }
+
+        return $arrayContent;
+    }
+
+    /**
+     * Get user videos
+     *
+     * @param string $uid Unique user id on Tiktok
+     * @return array
+     * @throws InvalidResponseException
+     * @throws LoginRequiredException
      */
     public function getUserVideos(string $uid): array
     {
@@ -61,7 +113,7 @@ class TiktokApi {
         ];
 
         $content = $this->request(
-            'aweme/v1/aweme/post/', 
+            'aweme/v1/aweme/post/',
             $extraParams
         );
 
@@ -72,7 +124,7 @@ class TiktokApi {
             $extraParams['max_cursor'] = $content['max_cursor'];
 
             $moreContent = $this->request(
-                'aweme/v1/aweme/post/', 
+                'aweme/v1/aweme/post/',
                 $extraParams
             );
 
@@ -91,10 +143,11 @@ class TiktokApi {
 
     /**
      * Search users on Tiktok
-     * 
-     * @param string @keyword a search term
+     *
+     * @param string $keyword a search term
      * @return array
-     * @throws Exception
+     * @throws InvalidResponseException
+     * @throws LoginRequiredException
      */
     public function searchUser(string $keyword): array
     {
@@ -107,7 +160,7 @@ class TiktokApi {
         ];
 
         $content = $this->request(
-            'aweme/v1/discover/search', 
+            'aweme/v1/discover/search',
             $extraParams
         );
 
@@ -116,17 +169,18 @@ class TiktokApi {
 
     /**
      * Get a video details
-     * 
-     * @param string @uid Unique video id on Tiktok
+     *
+     * @param string $uid Unique video id on Tiktok
      * @return array
-     * @throws Exception
+     * @throws InvalidResponseException
+     * @throws LoginRequiredException
      */
     public function getPost(string $uid)
     {
         $extraParams = ['aweme_id' => $uid];
-        
+
         $content = $this->request(
-            'aweme/v1/aweme/detail', 
+            'aweme/v1/aweme/detail',
             $extraParams
         );
 
@@ -134,52 +188,64 @@ class TiktokApi {
     }
 
     /**
-     * Makes request to Tiktok
-     * 
-     * @param $url relative path to the API endpoint
-     * @param $extraQueryPrameters Extra query parameters to be appended.
-     * @param $extraHeaders Extra headers to be appended.
-     * 
-     * @return array
-     * 
-     * @throws LoginRequiredException if user should be logged in for the current request
-     * @throws InvalidResponseException if there are errors in response
-     * @throws InvalidResponseException if reponse body is empty 
+     * Search hashtags on Tiktok
+     *
+     * @param string $keyword
+     * @return array list of to 10 found hashtags
+     * @throws InvalidResponseException
+     * @throws LoginRequiredException
      */
-    protected function request(
-        string $url,
-        array $extraQueryPrameters = [],
-        array $extraHeaders = []
-    ): array {
+    public function searchHashtags(string $keyword)
+    {
+        $extraParams = [
+            'cursor' => 0,
+            'count' => 10,
+            'hot_search' => 0,
+            'keyword' => $keyword,
+            'type' => 1
+        ];
 
-        $client = new Client([
-            'base_uri' => $this->_baseUrl,
-            //'debug' => true
-        ]);
-        
-        $response = $client->request('GET', $url, [
-            'query' => $this->_apiParams->getQueryParams($extraQueryPrameters),
-            'headers' => $this->_apiParams->getHeaders($extraHeaders),
-        ]);
-        
-        if ($response->getStatusCode() != 200) {
-            throw new InvalidResponseException('Problems fetching content');
+        $content = $this->request(
+            'aweme/v1/challenge/search/',
+            $extraParams
+        );
+
+        return $content;
+    }
+
+    /**
+     * et hashtags madiea on Tiktok. Currently returns max top 50 videos.
+     *
+     * @param string $uid Tiktok hashtag unique ID
+     * @param int $count limit results, currently only max top 50 videos will be returned
+     * @return array list of videos
+     * @throws InvalidResponseException
+     * @throws LoginRequiredException
+     */
+    public function getHashtagMedia(string $uid, int $count = 50)
+    {
+        // TODO add support for pagination
+
+        if ($count > 50) {
+            $count = 50;
         }
 
-        $arrayContent = json_decode($response->getBody()->getContents(), true);
+        $extraParams = [
+            'count' => $count,
+            'offset' => 0,
+            'max_cursor' => 0,
+            'query_type' => 0,
+            'is_cold_start' => 1,
+            'pull_type' => 1,
+            'ch_id' => $uid,
+            'type' => 5
+        ];
 
-        // If empty response
-        if (!$arrayContent) {
-            throw new InvalidResponseException('Invalid response');            
-        }
+        $content = $this->request(
+            'aweme/v1/challenge/aweme/',
+            $extraParams
+        );
 
-        if (isset($arrayContent['status_code']) && $arrayContent['status_code'] > 0) {
-            if ($arrayContent['status_code'] == 2483) {
-                throw new LoginRequiredException($arrayContent['status_msg']);
-            }
-            throw new InvalidResponseException($arrayContent['status_msg'] ?? 'Invalid response');            
-        }
-
-        return $arrayContent;
+        return $content;
     }
 }

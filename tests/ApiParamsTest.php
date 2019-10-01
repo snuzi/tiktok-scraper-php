@@ -1,8 +1,10 @@
 <?php
+
 namespace tests;
+
+use Exception;
 use PHPUnit\Framework\TestCase;
 use sabri\tiktok\ApiParams;
-use Exception;
 
 class ApiParamsTest extends TestCase
 {

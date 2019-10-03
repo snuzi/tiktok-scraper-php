@@ -3,7 +3,7 @@
 
 
 This is a PHP implementation for scraping Tiktok (or Musically) through API.
-
+`PHP 7.3` is required
 
 ## Scraper API
 - `getUser($uid)` Returns user profile data. `$uid` is user's Tiktok unique id.

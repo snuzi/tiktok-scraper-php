@@ -3,6 +3,7 @@
 
 
 This is a PHP implementation for scraping Tiktok (or Musically) through API.
+
 `PHP 7.3` is required
 
 ## Scraper API

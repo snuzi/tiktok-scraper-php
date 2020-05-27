@@ -1,6 +1,6 @@
 {
     "name": "sabri/tiktok",
-    "type": "App",
+    "type": "library",
     "description" : "sabri/tiktok is php Tiktok scraper",
     "keywords": ["php", "tiktok", "musically"],
     "homepage" : "http://github.com/snuzi",
